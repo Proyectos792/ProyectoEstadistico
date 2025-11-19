@@ -233,6 +233,26 @@ function applyGroupInfo(){
     }catch(e){ console.warn('applyGroupInfo error', e); }
 }
 
+// Cargar vídeos locales (si existen) en los elementos de cada unidad
+function loadUnitVideos(){
+    const vids = {
+        'video-normal': 'unidad1.mp4',
+        'video-muestreo': 'unidad2.mp4',
+        'video-estimacion': 'unidad3.mp4',
+        'video-hipotesis': 'unidad4.mp4'
+    };
+    Object.keys(vids).forEach(id=>{
+        const el = document.getElementById(id);
+        if(!el) return;
+        // si ya tiene source, no sobrescribir
+        if(el.querySelector('source')) return;
+        const src = vids[id];
+        // comprueba existencia aproximada (no puede acceder al FS desde navegador, se asume ruta relativa)
+        el.innerHTML = `<source src="${src}" type="video/mp4">Tu navegador no soporta el elemento de vídeo.`;
+        try{ el.load(); }catch(e){ /* ignore */ }
+    });
+}
+
 function drawNormal() {
     const mu = parseFloat(document.getElementById('mu').value);
     const sigma = parseFloat(document.getElementById('sigma').value);
@@ -414,6 +434,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     applyDefaults();
     loadSavedDocs();
     applyGroupInfo();
+    loadUnitVideos();
     drawNormal();
 });
 </script>
