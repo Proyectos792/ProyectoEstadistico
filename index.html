@@ -51,8 +51,10 @@
 
         video{width:100%;height:auto;border-radius:8px;background:#000;margin-top:12px}
 
-        .video-embeds{display:flex;gap:12px;margin-top:10px}
-        .video-embeds iframe{flex:1;min-width:200px;height:220px;border-radius:8px;border:0}
+        .video-embeds{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap}
+        .video-embeds .embed{flex:1;min-width:220px}
+        .video-embeds .embed{aspect-ratio:16/9}
+        .video-embeds iframe{width:100%;height:100%;border-radius:8px;border:0}
 
         pre{background:rgba(255,255,255,0.03);padding:12px;border-radius:8px;color:var(--muted);overflow:auto}
 
@@ -115,8 +117,8 @@
                 <video controls id="video-normal"></video>
                 <h4 style="margin:12px 0 6px 0;color:var(--muted)">Videos adicionales</h4>
                 <div class="video-embeds">
-                    <iframe src="https://www.youtube.com/embed/c7NXmhQ--LE" title="Distribución Normal 1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    <iframe src="https://www.youtube.com/embed/CKerE1YYAv8" title="Distribución Normal 2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <div class="embed"><iframe loading="lazy" src="https://www.youtube.com/embed/c7NXmhQ--LE" title="Distribución Normal 1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                    <div class="embed"><iframe loading="lazy" src="https://www.youtube.com/embed/CKerE1YYAv8" title="Distribución Normal 2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
                 </div>
             </details>
 
@@ -146,8 +148,8 @@
                 <video controls id="video-muestreo"></video>
                 <h4 style="margin:12px 0 6px 0;color:var(--muted)">Videos adicionales</h4>
                 <div class="video-embeds">
-                    <iframe src="https://www.youtube.com/embed/ldGHhUmGB2A" title="Teoría del muestreo 1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    <iframe src="https://www.youtube.com/embed/3lfbD4X32YU" title="Teoría del muestreo 2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <div class="embed"><iframe loading="lazy" src="https://www.youtube.com/embed/ldGHhUmGB2A" title="Teoría del muestreo 1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                    <div class="embed"><iframe loading="lazy" src="https://www.youtube.com/embed/3lfbD4X32YU" title="Teoría del muestreo 2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
                 </div>
             </details>
 
@@ -173,8 +175,8 @@
                 <video controls id="video-estimacion"></video>
                 <h4 style="margin:12px 0 6px 0;color:var(--muted)">Videos adicionales</h4>
                 <div class="video-embeds">
-                    <iframe src="https://www.youtube.com/embed/_YxZ3yO6i4E" title="Estimación estadística 1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    <iframe src="https://www.youtube.com/embed/MfL1xcVWzJU" title="Estimación estadística 2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <div class="embed"><iframe loading="lazy" src="https://www.youtube.com/embed/_YxZ3yO6i4E" title="Estimación estadística 1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                    <div class="embed"><iframe loading="lazy" src="https://www.youtube.com/embed/MfL1xcVWzJU" title="Estimación estadística 2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
                 </div>
             </details>
 
@@ -203,8 +205,8 @@
                 <video controls id="video-hipotesis"></video>
                 <h4 style="margin:12px 0 6px 0;color:var(--muted)">Videos adicionales</h4>
                 <div class="video-embeds">
-                    <iframe src="https://www.youtube.com/embed/k3oBZQ5Brbs" title="Pruebas de hipótesis 1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    <iframe src="https://www.youtube.com/embed/tCLeJCuBSZM" title="Pruebas de hipótesis 2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <div class="embed"><iframe loading="lazy" src="https://www.youtube.com/embed/k3oBZQ5Brbs" title="Pruebas de hipótesis 1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                    <div class="embed"><iframe loading="lazy" src="https://www.youtube.com/embed/tCLeJCuBSZM" title="Pruebas de hipótesis 2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
                 </div>
             </details>
 
