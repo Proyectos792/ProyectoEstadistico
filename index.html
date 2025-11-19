@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Estadística Interactiva</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root{
+            --bg: #0f1724;
+            --card: #0b1220;
+            --muted: #9aa4b2;
+            --accent: #6C8EF5;
+            --accent-2: #4A63E7;
+            --glass: rgba(255,255,255,0.03);
+            --radius: 12px;
+        }
+        *{box-sizing:border-box}
+        html,body{height:100%}
+        body{
+            margin:0; font-family: 'Inter', system-ui, Arial, sans-serif; background: linear-gradient(180deg,#071020 0%, #0b1a2a 100%); color:#e6eef8; -webkit-font-smoothing:antialiased; padding:28px;
+        }
+        .wrap{max-width:1100px;margin:0 auto}
+        header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+        .brand{display:flex;gap:14px;align-items:center}
+        .logo{width:52px;height:52px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:700;color:white}
+        h1{font-size:20px;margin:0;color: #eaf0ff}
+        nav{display:flex;gap:12px}
+        nav a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:8px;font-size:14px}
+        nav a:hover{background:var(--glass);color:#fff}
+
+        main{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent); padding:20px;border-radius:16px}
+        .intro{display:flex;align-items:center;justify-content:space-between;gap:12px}
+        .intro p{margin:0;color:var(--muted)}
+
+        /* Grid of cards */
+        .cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;margin-top:18px}
+        details.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:18px;border-radius:var(--radius);box-shadow:0 6px 18px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03)}
+        summary{font-size:16px;font-weight:600;cursor:pointer;list-style:none;outline:none}
+        details[open] summary{color:var(--accent-2)}
+        .card p{color:var(--muted);margin:10px 0}
+
+        /* Controls */
+        .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+        input[type=number]{padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit;width:120px}
+        .btn{padding:9px 14px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;border:none;border-radius:10px;cursor:pointer;box-shadow:0 6px 20px rgba(74,99,231,0.15)}
+        .btn:active{transform:translateY(1px)}
+
+        .chart-container{width:100%;max-width:100%;margin:10px 0}
+        canvas{width:100% !important;height:250px !important}
+
+        video{width:100%;height:auto;border-radius:8px;background:#000;margin-top:12px}
+
+        pre{background:rgba(255,255,255,0.03);padding:12px;border-radius:8px;color:var(--muted);overflow:auto}
+
+        footer{margin-top:18px;padding:14px;text-align:center;color:var(--muted);font-size:13px}
+
+        @media (max-width:520px){
+            header{flex-direction:column;align-items:flex-start;gap:12px}
+            .brand h1{font-size:16px}
+            canvas{height:200px !important}
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrap">
+    <header>
+        <div class="brand">
+            <div class="logo">E</div>
+            <div>
+                <h1>Estadística Interactiva</h1>
+                <p style="margin:0;color:var(--muted);font-size:13px">Explora conceptos estadísticos con visualizaciones sencillas</p>
+            </div>
+        </div>
+        <nav>
+            <a href="#">Inicio</a>
+            <a href="#">Distribución</a>
+            <a href="#">Muestreo</a>
+        </nav>
+    </header>
+
+    <main>
+        
+
+        <section class="cards-grid">
+
+            <details class="card">
+                <summary>1. Distribución Normal</summary>
+                <p>Una distribución normal (campana) describe cómo se distribuyen valores alrededor de una media. La <strong>media (μ)</strong> determina el centro y la <strong>desviación estándar (σ)</strong> la dispersión. Ajusta los parámetros para ver cómo cambia la curva.</p>
+
+                <div class="controls">
+                    <label>Media (μ): <input id="mu" type="range" min="-5" max="5" value="0" step="0.1"></label>
+                    <output id="mu-val">0</output>
+                    <label>Desviación estándar (σ): <input id="sigma" type="range" min="0.2" max="3" value="1" step="0.05"></label>
+                    <output id="sigma-val">1</output>
+                    <button class="btn" id="normal-play">Animar σ</button>
+                    <button class="btn" onclick="drawNormal()">Actualizar</button>
+                    <label style="margin-left:auto">Documento: <input id="doc-normal" type="text" placeholder="URL del documento" style="width:220px" value="https://www.uv.es/ceaces/pdf/normal.pdf"></label>
+                    <button class="btn" onclick="openDoc('doc-normal')">Abrir</button>
+                        <button class="btn" onclick="saveDoc('doc-normal')">Guardar</button>
+                        <button class="btn" onclick="openDoc('doc-normal')">Ver PDF</button>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="normalChart"></canvas>
+                </div>
+
+                <h4 style="margin:12px 0 6px 0;color:var(--muted)">Explicación breve</h4>
+                <p style="color:var(--muted);margin-top:6px">La probabilidad de observar valores se representa por la altura de la curva. A menor σ la curva es más estrecha; a mayor σ se aplana.</p>
+                <h4 style="margin:12px 0 6px 0;color:var(--muted)">Video explicativo</h4>
+                <video controls id="video-normal"></video>
+            </details>
+
+            <details class="card">
+                <summary>2. Teoría del Muestreo</summary>
+                <p>El muestreo repetido permite observar la variabilidad de una estadística (p. ej. la media). La <strong>distribución muestral</strong> se aproxima a una normal si el tamaño de muestra es suficientemente grande (TCL).</p>
+
+                <div class="controls">
+                    <label>Tamaño muestra (n): <input id="sample-n" type="number" min="5" max="200" value="30"></label>
+                    <label>Repeticiones: <input id="sample-reps" type="number" min="50" max="2000" value="300"></label>
+                    <select id="sample-dist">
+                        <option value="uniform">Uniforme [0,10]</option>
+                        <option value="normal">Normal N(5,2)</option>
+                    </select>
+                    <button class="btn" onclick="simulateSampling()">Simular muestreo</button>
+                    <label style="margin-left:auto">Documento: <input id="doc-sampling" type="text" placeholder="URL del documento" style="width:220px" value="https://sivea.uson.mx/docentes/tareas/Material_didactico_semestre_2021-2_1.pdf"></label>
+                    <button class="btn" onclick="openDoc('doc-sampling')">Abrir</button>
+                    <button class="btn" onclick="saveDoc('doc-sampling')">Guardar</button>
+                    <button class="btn" onclick="openDoc('doc-sampling')">Ver PDF</button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="samplingChart"></canvas>
+                </div>
+
+                <p style="color:var(--muted);margin-top:8px">Observa el histograma de medias muestrales. Ajusta n para ver cómo se concentra la distribución.</p>
+                <h4 style="margin:12px 0 6px 0;color:var(--muted)">Video explicativo</h4>
+                <video controls id="video-muestreo"></video>
+            </details>
+
+            <details class="card">
+                <summary>3. Estimación</summary>
+                <p>La estimación puntual ofrece un valor único (p. ej. media muestral). Los intervalos de confianza (IC) dan un rango plausible para el parámetro con un nivel de confianza.</p>
+
+                <div class="controls">
+                    <label>Tamaño muestra (n): <input id="est-n" type="number" min="5" max="500" value="20"></label>
+                    <label>Confianza: <select id="conf-level"><option value="0.9">90%</option><option value="0.95" selected>95%</option><option value="0.99">99%</option></select></label>
+                    <button class="btn" onclick="estimate()">Generar estimación</button>
+                    <label style="margin-left:auto">Documento: <input id="doc-est" type="text" placeholder="URL del documento" style="width:220px" value="https://asignatura.us.es/dadpsico/apuntes/EstimacionEstadistica.pdf"></label>
+                    <button class="btn" onclick="openDoc('doc-est')">Abrir</button>
+                    <button class="btn" onclick="saveDoc('doc-est')">Guardar</button>
+                    <button class="btn" onclick="openDoc('doc-est')">Ver PDF</button>
+                </div>
+                <pre id="est-output"></pre>
+                <div class="chart-container">
+                    <canvas id="estChart"></canvas>
+                </div>
+
+                <h4 style="margin:12px 0 6px 0;color:var(--muted)">Video explicativo</h4>
+                <video controls id="video-estimacion"></video>
+            </details>
+
+            <details class="card">
+                <summary>4. Pruebas de Hipótesis</summary>
+                <p>Contrastar hipótesis permite evaluar si los datos son compatibles con una suposición (H₀). Se calcula un estadístico y un p-valor; si el p-valor es menor que α, se rechaza H₀.</p>
+
+                <div class="controls">
+                    <label>H₀ (media): <input id="h0" type="number" value="5"></label>
+                    <label>Tamaño muestra (n): <input id="test-n" type="number" min="5" max="200" value="30"></label>
+                    <label>α: <select id="alpha"><option value="0.01">0.01</option><option value="0.05" selected>0.05</option><option value="0.1">0.1</option></select></label>
+                    <button class="btn" onclick="testHypothesis()">Probar hipótesis</button>
+                    <label style="margin-left:auto">Documento: <input id="doc-test" type="text" placeholder="URL del documento" style="width:220px" value="https://www.cepal.org/sites/default/files/courses/files/01_2_las_pruebas_de_hipotesis.pdf"></label>
+                    <button class="btn" onclick="openDoc('doc-test')">Abrir</button>
+                    <button class="btn" onclick="saveDoc('doc-test')">Guardar</button>
+                    <button class="btn" onclick="openDoc('doc-test')">Ver PDF</button>
+                </div>
+                <pre id="test-output"></pre>
+
+                <div class="chart-container">
+                    <canvas id="testChart"></canvas>
+                </div>
+
+                <p style="color:var(--muted);margin-top:8px">La gráfica muestra la distribución muestral bajo H₀ y la posición del estadístico observado.</p>
+                <h4 style="margin:12px 0 6px 0;color:var(--muted)">Video explicativo</h4>
+                <video controls id="video-hipotesis"></video>
+            </details>
+
+        </section>
+    </main>
+        <!-- Espacio para mostrar integrantes / universidad / asignatura pasado desde el código -->
+        <div id="group-info" style="margin-top:18px;padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);color:var(--muted);font-size:14px">
+            (Aquí puedes pasar los nombres, universidad y asignatura mediante código. Ejemplo: window.__GROUP_INFO = { members: 'Ana\nLuis', uni: 'Universidad X', subject: 'Estadística I' })
+        </div>
+
+    <footer>
+        Visualizaciones con <strong>Chart.js</strong>. Diseñado para aprendizaje y demostraciones.
+    </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// --- OPCIÓN: pega aquí los datos por defecto desde tu código ---
+// Ejemplo de documentos por defecto (pegar arriba del script):
+// window.__DOCS_DEFAULT = { 'doc-normal': 'https://example.com/normal.pdf', 'doc-sampling': 'https://example.com/muestreo.pdf', 'doc-est':'https://example.com/estimacion.pdf', 'doc-test':'https://example.com/hipotesis.pdf' };
+// Pega tus valores antes de que se cargue la página para que se apliquen automáticamente.
+
+function applyDefaults(){
+    try{
+        if(window.__DOCS_DEFAULT){
+            const d = window.__DOCS_DEFAULT;
+            Object.keys(d).forEach(k=>{
+                const el = document.getElementById(k);
+                if(el) el.value = d[k];
+                localStorage.setItem('doc-'+k, d[k]);
+            });
+        }
+    }catch(e){ console.warn('applyDefaults error', e); }
+}
+
+// Aplica información del grupo pasada por código (no hay inputs en la UI)
+// Ejemplo (pegar antes del script):
+// window.__GROUP_INFO = { members: 'Ana\nLuis', uni: 'Universidad X', subject: 'Estadística I' };
+function applyGroupInfo(){
+    try{
+        const dest = document.getElementById('group-info');
+        if(!dest) return;
+        const g = window.__GROUP_INFO;
+        if(!g){ return }
+        const members = (g.members||'').replace(/\n/g,'<br>');
+        const uni = g.uni || '';
+        const subj = g.subject || '';
+        dest.innerHTML = `<strong>Integrantes:</strong> ${members}<br><strong>Universidad:</strong> ${uni} — <strong>Materia:</strong> ${subj}`;
+    }catch(e){ console.warn('applyGroupInfo error', e); }
+}
+
+function drawNormal() {
+    const mu = parseFloat(document.getElementById('mu').value);
+    const sigma = parseFloat(document.getElementById('sigma').value);
+    let x = [], y = [];
+    for (let i = -4; i <= 4; i+=0.1) {
+        x.push((i*sigma + mu).toFixed(2));
+        y.push((1/(sigma*Math.sqrt(2*Math.PI))) * Math.exp(-(i*i)/2));
+    }
+    const ctx = document.getElementById('normalChart').getContext('2d');
+    if (window._normalChart) window._normalChart.destroy();
+    window._normalChart = new Chart(ctx, {
+        type: 'line', data:{ labels:x, datasets:[{data:y, borderWidth:2, borderColor:'#7fa1ff', backgroundColor:'rgba(124,157,255,0.06)', tension:0.25}] },
+        options:{plugins:{legend:{display:false}},maintainAspectRatio:false}
+    });
+}
+
+// Animación para la distribución normal (varía sigma)
+let _normalAnim = null;
+document.getElementById('mu').addEventListener('input',e=>{ document.getElementById('mu-val').value = e.target.value });
+document.getElementById('sigma').addEventListener('input',e=>{ document.getElementById('sigma-val').value = e.target.value });
+document.getElementById('normal-play').addEventListener('click',()=>{
+    if(_normalAnim){ clearInterval(_normalAnim); _normalAnim = null; document.getElementById('normal-play').textContent='Animar σ'; return }
+    let dir = 1;
+    _normalAnim = setInterval(()=>{
+        let sEl = document.getElementById('sigma');
+        let val = parseFloat(sEl.value) + dir*0.03;
+        if(val>2.7 || val<0.25) dir *= -1;
+        sEl.value = val.toFixed(2);
+        document.getElementById('sigma-val').value = sEl.value;
+        drawNormal();
+    },80);
+    document.getElementById('normal-play').textContent='Parar';
+});
+
+// Box-Muller gaussian random
+function gaussianRandom(){
+    let u = 0, v = 0;
+    while(u === 0) u = Math.random();
+    while(v === 0) v = Math.random();
+    return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+}
+
+// (Grupo) El formulario del grupo ha sido eliminado de la UI; las funciones asociadas también fueron removidas.
+
+function saveDoc(id){
+    const val = document.getElementById(id).value;
+    if(!val) return alert('Introduce una URL primero');
+    localStorage.setItem('doc-'+id, val);
+    alert('Documento guardado');
+}
+function openDoc(id){
+    const val = document.getElementById(id).value || localStorage.getItem('doc-'+id);
+    if(!val) return alert('No hay URL para este documento');
+    window.open(val, '_blank');
+}
+
+function loadSavedDocs(){
+    ['doc-normal','doc-sampling','doc-est','doc-test'].forEach(id=>{
+        const v = localStorage.getItem('doc-'+id);
+        if(v) document.getElementById(id).value = v;
+    });
+}
+
+
+function simulateSampling(){
+    const n = parseInt(document.getElementById('sample-n').value,10);
+    const reps = parseInt(document.getElementById('sample-reps').value,10);
+    const dist = document.getElementById('sample-dist').value;
+    let means = [];
+    for(let i=0;i<reps;i++){
+        let sample=[];
+        for(let j=0;j<n;j++){
+            if(dist==='uniform') sample.push(Math.random()*10);
+            else sample.push(5 + (Math.sqrt(2)*gaussianRandom()));
+        }
+        means.push(sample.reduce((a,b)=>(a+b),0)/sample.length);
+    }
+    // make histogram bins
+    const bins = 25;
+    const min = Math.min(...means), max = Math.max(...means);
+    const width = (max - min) || 1;
+    const counts = new Array(bins).fill(0);
+    const labels = new Array(bins).fill(0).map((_,i)=> (min + (i+0.5)*(width/bins)).toFixed(2) );
+    means.forEach(v=>{ const idx = Math.min(bins-1, Math.floor((v-min)/width*bins)); counts[idx]++ });
+    const ctx = document.getElementById('samplingChart').getContext('2d');
+    if (window._samplingChart) window._samplingChart.destroy();
+    window._samplingChart = new Chart(ctx, {
+        type: 'bar',
+        data: { labels: labels, datasets: [{ data: counts, backgroundColor: 'rgba(106,145,255,0.85)' }] },
+        options: { plugins: { legend: { display: false } }, maintainAspectRatio: false }
+    });
+}
+
+function estimate(){
+    const n = parseInt(document.getElementById('est-n').value,10);
+    const conf = parseFloat(document.getElementById('conf-level').value);
+    let sample = Array.from({length:n},()=>Math.random()*10);
+    let mean = sample.reduce((a,b)=>a+b)/n;
+    let sd = Math.sqrt(sample.map(v=>(v-mean)**2).reduce((a,b)=>a+b)/(n-1));
+    let se = sd/Math.sqrt(n);
+    // z critical approx
+    const zmap = { '0.9':1.645, '0.95':1.96, '0.99':2.575 };
+    const z = zmap[String(conf)] || 1.96;
+    let ic1 = mean - z*se;
+    let ic2 = mean + z*se;
+    document.getElementById('est-output').textContent = `Media: ${mean.toFixed(3)}\nSD: ${sd.toFixed(3)}\nIC${(conf*100).toFixed(0)}%: [${ic1.toFixed(3)}, ${ic2.toFixed(3)}]`;
+    // plot mean with interval
+    const ctx = document.getElementById('estChart').getContext('2d');
+    if(window._estChart) window._estChart.destroy();
+    window._estChart = new Chart(ctx, {
+        type: 'bar',
+        data: { labels: ['Media'], datasets: [{ data: [mean], backgroundColor: 'rgba(124,157,255,0.9)' }] },
+        options: { plugins: { legend: { display: false }, tooltip: { enabled: false } }, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+    });
+    // draw error bar overlay
+    const ymin = Math.max(0, ic1 - mean + mean);
+}
+
+function testHypothesis(){
+    const h0 = parseFloat(document.getElementById('h0').value);
+    const n = parseInt(document.getElementById('test-n').value,10);
+    const alpha = parseFloat(document.getElementById('alpha').value);
+    // simulate a sample from an unknown distribution (for demo we use Uniform[0,10])
+    const sample = Array.from({length:n},()=>Math.random()*10);
+    const mean = sample.reduce((a,b)=>a+b)/n;
+    const sd = Math.sqrt(sample.map(v=>(v-mean)**2).reduce((a,b)=>a+b)/(n-1));
+    const t = (mean - h0)/(sd/Math.sqrt(n));
+    // estimate p-value by simulation under H0
+    const reps = 2000;
+    let moreExtreme = 0;
+    for(let i=0;i<reps;i++){
+        let s = Array.from({length:n},()=>h0 + (Math.random()-0.5)*sd*2);
+        const m = s.reduce((a,b)=>a+b)/n;
+        const sd2 = Math.sqrt(s.map(v=>(v-m)**2).reduce((a,b)=>a+b)/(n-1));
+        const t2 = (m - h0)/(sd2/Math.sqrt(n));
+        if(Math.abs(t2) >= Math.abs(t)) moreExtreme++;
+    }
+    const pval = Math.max(1/reps, moreExtreme/reps);
+    const decision = pval < alpha ? 'Rechazar H₀' : 'No rechazar H₀';
+    document.getElementById('test-output').textContent = `Media: ${mean.toFixed(3)}\nSD: ${sd.toFixed(3)}\nValor t: ${t.toFixed(3)}\np-valor ≈ ${pval.toFixed(3)}\nResultado: ${decision}`;
+
+    // plot sampling distribution under H0 (approx normal) and mark observed t
+    const ctx = document.getElementById('testChart').getContext('2d');
+    // create a synthetic distribution of t under H0
+    const tvals = [];
+    for(let i=0;i<reps;i++){
+        let s = Array.from({length:n},()=>h0 + (Math.random()-0.5)*sd*2);
+        const m = s.reduce((a,b)=>a+b)/n;
+        const sd2 = Math.sqrt(s.map(v=>(v-m)**2).reduce((a,b)=>a+b)/(n-1));
+        const t2 = (m - h0)/(sd2/Math.sqrt(n));
+        tvals.push(t2);
+    }
+    // histogram
+    const bins = 40;
+    const mn = Math.min(...tvals), mx = Math.max(...tvals); const w = (mx-mn)||1;
+    const counts = new Array(bins).fill(0);
+    const labs = new Array(bins).fill(0).map((_,i)=>(mn + (i+0.5)*(w/bins)).toFixed(2));
+    tvals.forEach(v=>{ const idx = Math.min(bins-1, Math.floor((v-mn)/w*bins)); counts[idx]++ });
+    if(window._testChart) window._testChart.destroy();
+    window._testChart = new Chart(ctx,{type:'bar',data:{labels:labs,datasets:[{data:counts,backgroundColor:'rgba(255,140,120,0.85)'}]},options:{plugins:{legend:{display:false}},maintainAspectRatio:false}});
+    // mark observed t via an annotation-like vertical line (drawn on canvas)
+    const meta = window._testChart;
+    // after render, draw line
+    meta.options.animation = meta.options.animation || {};
+    setTimeout(()=>{
+        const chartArea = meta.chartArea;
+        const xScale = meta.scales['x'];
+        // find nearest bin index for t
+        const idx = Math.floor((t - mn)/w*bins);
+        const x = (idx+0.5)/bins * (chartArea.right - chartArea.left) + chartArea.left;
+        const ctxc = meta.ctx;
+        ctxc.save(); ctxc.beginPath(); ctxc.moveTo(x,chartArea.top); ctxc.lineTo(x,chartArea.bottom); ctxc.lineWidth=2; ctxc.strokeStyle='#fff'; ctxc.stroke(); ctxc.restore();
+    },300);
+}
+
+// Inicializar gráficos básicos
+document.addEventListener('DOMContentLoaded',()=>{
+    // aplicar valores por defecto para documentos si el desarrollador los pegó en `window.__DOCS_DEFAULT`
+    applyDefaults();
+    loadSavedDocs();
+    applyGroupInfo();
+    drawNormal();
+});
+</script>
+
+</body>
+</html>
