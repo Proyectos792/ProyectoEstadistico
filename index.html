@@ -51,6 +51,9 @@
 
         video{width:100%;height:auto;border-radius:8px;background:#000;margin-top:12px}
 
+        .video-embeds{display:flex;gap:12px;margin-top:10px}
+        .video-embeds iframe{flex:1;min-width:200px;height:220px;border-radius:8px;border:0}
+
         pre{background:rgba(255,255,255,0.03);padding:12px;border-radius:8px;color:var(--muted);overflow:auto}
 
         footer{margin-top:18px;padding:14px;text-align:center;color:var(--muted);font-size:13px}
@@ -110,6 +113,11 @@
                 <p style="color:var(--muted);margin-top:6px">La probabilidad de observar valores se representa por la altura de la curva. A menor σ la curva es más estrecha; a mayor σ se aplana.</p>
                 <h4 style="margin:12px 0 6px 0;color:var(--muted)">Video explicativo</h4>
                 <video controls id="video-normal"></video>
+                <h4 style="margin:12px 0 6px 0;color:var(--muted)">Videos adicionales</h4>
+                <div class="video-embeds">
+                    <iframe src="https://www.youtube.com/embed/c7NXmhQ--LE" title="Distribución Normal 1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <iframe src="https://www.youtube.com/embed/CKerE1YYAv8" title="Distribución Normal 2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
             </details>
 
             <details class="card">
@@ -136,6 +144,11 @@
                 <p style="color:var(--muted);margin-top:8px">Observa el histograma de medias muestrales. Ajusta n para ver cómo se concentra la distribución.</p>
                 <h4 style="margin:12px 0 6px 0;color:var(--muted)">Video explicativo</h4>
                 <video controls id="video-muestreo"></video>
+                <h4 style="margin:12px 0 6px 0;color:var(--muted)">Videos adicionales</h4>
+                <div class="video-embeds">
+                    <iframe src="https://www.youtube.com/embed/ldGHhUmGB2A" title="Teoría del muestreo 1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <iframe src="https://www.youtube.com/embed/3lfbD4X32YU" title="Teoría del muestreo 2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
             </details>
 
             <details class="card">
@@ -158,6 +171,11 @@
 
                 <h4 style="margin:12px 0 6px 0;color:var(--muted)">Video explicativo</h4>
                 <video controls id="video-estimacion"></video>
+                <h4 style="margin:12px 0 6px 0;color:var(--muted)">Videos adicionales</h4>
+                <div class="video-embeds">
+                    <iframe src="https://www.youtube.com/embed/_YxZ3yO6i4E" title="Estimación estadística 1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <iframe src="https://www.youtube.com/embed/MfL1xcVWzJU" title="Estimación estadística 2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
             </details>
 
             <details class="card">
@@ -183,6 +201,11 @@
                 <p style="color:var(--muted);margin-top:8px">La gráfica muestra la distribución muestral bajo H₀ y la posición del estadístico observado.</p>
                 <h4 style="margin:12px 0 6px 0;color:var(--muted)">Video explicativo</h4>
                 <video controls id="video-hipotesis"></video>
+                <h4 style="margin:12px 0 6px 0;color:var(--muted)">Videos adicionales</h4>
+                <div class="video-embeds">
+                    <iframe src="https://www.youtube.com/embed/k3oBZQ5Brbs" title="Pruebas de hipótesis 1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <iframe src="https://www.youtube.com/embed/tCLeJCuBSZM" title="Pruebas de hipótesis 2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
             </details>
 
         </section>
@@ -203,6 +226,14 @@
 // Ejemplo de documentos por defecto (pegar arriba del script):
 // window.__DOCS_DEFAULT = { 'doc-normal': 'https://example.com/normal.pdf', 'doc-sampling': 'https://example.com/muestreo.pdf', 'doc-est':'https://example.com/estimacion.pdf', 'doc-test':'https://example.com/hipotesis.pdf' };
 // Pega tus valores antes de que se cargue la página para que se apliquen automáticamente.
+
+// Datos del grupo por defecto (pegados desde tu petición)
+window.__GROUP_INFO = {
+    members: 'Jhonatan Mora\nDaniela Martinez\nLeila Martínez',
+    uni: 'Corporacion Universitaria Del Caribe - Cecar',
+    subject: 'Estadistica Inferencial',
+    semester: '2025-2'
+};
 
 function applyDefaults(){
     try{
@@ -229,7 +260,8 @@ function applyGroupInfo(){
         const members = (g.members||'').replace(/\n/g,'<br>');
         const uni = g.uni || '';
         const subj = g.subject || '';
-        dest.innerHTML = `<strong>Integrantes:</strong> ${members}<br><strong>Universidad:</strong> ${uni} — <strong>Materia:</strong> ${subj}`;
+        const sem = g.semester ? ` — <strong>Semestre:</strong> ${g.semester}` : '';
+        dest.innerHTML = `<strong>Integrantes:</strong> ${members}<br><strong>Universidad:</strong> ${uni} — <strong>Materia:</strong> ${subj}${sem}`;
     }catch(e){ console.warn('applyGroupInfo error', e); }
 }
 
@@ -246,7 +278,9 @@ function loadUnitVideos(){
         if(!el) return;
         // si ya tiene source, no sobrescribir
         if(el.querySelector('source')) return;
-        const src = vids[id];
+        // Base de las rutas de vídeo — actualizar si mueves los archivos (p. ej. 'assets/videos')
+        const VIDEO_BASE = './';
+        const src = VIDEO_BASE + vids[id];
         // comprueba existencia aproximada (no puede acceder al FS desde navegador, se asume ruta relativa)
         el.innerHTML = `<source src="${src}" type="video/mp4">Tu navegador no soporta el elemento de vídeo.`;
         try{ el.load(); }catch(e){ /* ignore */ }
